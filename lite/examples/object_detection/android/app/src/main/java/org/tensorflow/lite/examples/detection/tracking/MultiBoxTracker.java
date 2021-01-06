@@ -27,6 +27,9 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -188,18 +191,29 @@ public class MultiBoxTracker {
       return;
     }
 
+    List<TrackedRecognition> tempObject = new LinkedList<TrackedRecognition>();
     for (final Pair<Float, Recognition> potential : rectsToTrack) {
       final TrackedRecognition trackedRecognition = new TrackedRecognition();
       trackedRecognition.detectionConfidence = potential.first;
       trackedRecognition.location = new RectF(potential.second.getLocation());
       trackedRecognition.title = potential.second.getTitle();
       trackedRecognition.color = COLORS[trackedObjects.size()];
-      trackedObjects.add(trackedRecognition);
+      tempObject.add(trackedRecognition);
 
-      if (trackedObjects.size() >= COLORS.length) {
+      if (tempObject.size() >= COLORS.length) {
         break;
       }
     }
+    Collections.sort(tempObject, new Comparator<TrackedRecognition>() {
+      @Override
+      public int compare(TrackedRecognition o1, TrackedRecognition o2) {
+        return (int) (o1.detectionConfidence - o2.detectionConfidence);
+      }
+    });
+
+    trackedObjects.add(tempObject.get(0));
+
+
   }
 
   private static class TrackedRecognition {
