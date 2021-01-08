@@ -209,16 +209,6 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 mappedRecognitions.add(result);
               }
             }
-            if (mappedRecognitions == null || mappedRecognitions.size() == 0){
-              //提示
-              runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                  Toast.makeText(DetectorActivity.this, getResources().getString(R.string.move_camera_tips), Toast.LENGTH_LONG).show();
-                }
-              });
-              return;
-            }
 
             tracker.trackResults(mappedRecognitions, currTimestamp);
             trackingOverlay.postInvalidate();

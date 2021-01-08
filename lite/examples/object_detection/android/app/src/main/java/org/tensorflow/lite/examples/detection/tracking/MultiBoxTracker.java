@@ -25,7 +25,6 @@ import android.graphics.Paint.Join;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 
@@ -185,10 +184,6 @@ public class MultiBoxTracker {
 
       rectsToTrack.add(new Pair<Float, Recognition>(result.getConfidence(), result));
     }
-    TrackedRecognition lastTrackedRecognition = null;
-    if (trackedObjects != null && trackedObjects.size() > 0){
-        lastTrackedRecognition = trackedObjects.get(0);
-    }
 
     trackedObjects.clear();
     if (rectsToTrack.isEmpty()) {
@@ -209,7 +204,6 @@ public class MultiBoxTracker {
         break;
       }
     }
-
     Collections.sort(tempObject, new Comparator<TrackedRecognition>() {
       @Override
       public int compare(TrackedRecognition o1, TrackedRecognition o2) {
@@ -217,17 +211,7 @@ public class MultiBoxTracker {
       }
     });
 
-    TrackedRecognition nowTrack = tempObject.get(0);
-
-    if (lastTrackedRecognition != null){
-      boolean isSame = lastTrackedRecognition.location.contains(nowTrack.location);
-      boolean isLarge =  nowTrack.location.contains(lastTrackedRecognition.location);
-      //记录相同物体边框的次数
-      Log.e("hxl","isSame"+isSame);
-      Log.e("hxl","isLarge"+isLarge);
-    }
-
-    trackedObjects.add(nowTrack);
+    trackedObjects.add(tempObject.get(0));
 
 
   }
